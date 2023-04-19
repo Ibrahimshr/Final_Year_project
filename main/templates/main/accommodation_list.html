@@ -1,0 +1,46 @@
+{% extends "base_generic.html" %} 
+{% block content %}
+<div class="container mt-5">
+  {% for accommodation in accommodations %}
+  <div class="row mb-5">
+    <div class="col-md-3">
+      <img
+        src="{{ accommodation.image.url }}"
+        alt="{{ accommodation.name }}"
+        class="img-fluid"
+      />
+    </div>
+    <div class="col-md-9">
+      <h2><strong>House Name:</strong> {{ accommodation.name }}</h2>
+      <p><strong>Description:</strong> {{ accommodation.description }}</p>
+      <p><strong>Address:</strong> {{ accommodation.address }}</p>
+      <p><strong>Monthly Cost:</strong> {{ accommodation.cost_per_month }}</p>
+      <p><strong>Deposit:</strong> {{ accommodation.deposit }}</p>
+      <p><strong>Available From:</strong> {{ accommodation.available_from }}</p>
+      <p><strong>Available To:</strong> {{ accommodation.available_to }}</p>
+      {% if accommodation.is_booked == True %}
+      <p><strong>Has been booked:</strong> Yes</p>
+      {% else %}
+      <p><strong>Has been booked:</strong> No</p>
+      {% endif %}
+      {% if user.profile.user_type == "S" %}
+      {% if accommodation.is_booked == True %}
+      {% else %}
+      <button type="button" onclick="window.location.href='{% url 'booking_or_enquiry' accommodation_id=accommodation.pk %}'" class="btn btn-primary">Book or Inquire</button>
+      {% endif %}
+      {% endif %}
+      {% if user.is_authenticated %} 
+        {% if user.is_staff or user.profile.user_type == "L" %}
+          <a href="{% url 'delete_accommodation' pk=accommodation.pk %}" class="btn btn-danger">Delete</a>
+          {% if accommodation.is_booked == True %}
+          <a href="{% url 'set_accommodation_unbooked' pk=accommodation.pk %}" class="btn btn-danger">Set as unbooked</a>
+          {% else %}
+          <a href="{% url 'set_accommodation_booked' pk=accommodation.pk %}" class="btn btn-danger">Set as booked</a>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

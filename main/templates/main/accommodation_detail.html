@@ -1,0 +1,10 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <div class="accommodation">
+    <h2>{{ accommodation.name }}</h2>
+    <p>{{ accommodation.description }}</p>
+    <img src="{{ accommodation.image.url }}" alt="{{ accommodation.name }}">
+  </div>
+  <a href="{% url 'delete_accommodation' pk=accommodation.pk %}" class="btn btn-danger">Delete</a>
+{% endblock %}

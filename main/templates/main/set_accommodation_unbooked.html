@@ -1,0 +1,17 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <div class="content-section">
+    <form method="POST">
+      {% csrf_token %}
+      <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Set Accommodation as Unbooked</legend>
+        <p>Set the accommodation as unbooked "{{ accommodation.name }}"?</p>
+      </fieldset>
+      <div class="form-group">
+        <button class="btn btn-outline-danger" type="submit">Yes</button>
+        <a class="btn btn-outline-secondary" href="{% url 'main' %}">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}
