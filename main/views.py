@@ -321,6 +321,7 @@ def booking_create(request, accommodation_id):
         booking.save()
         accommodation.availability = False
         accommodation.save()
+
         #send email to the student
         if request.user.profile.user_type == 'S':
             subject = 'Your accommodation has been booked'
@@ -333,7 +334,7 @@ def booking_create(request, accommodation_id):
             message = 'Dear {},\n\nA student has booked your accommodation at {}.\n\nPlease log in to your account to mark the accommodation as booked.\n\nThank you for using our application!\n\nBest regards,\nInter Accommodation Team'.format(accommodation.user.first_name, accommodation.name)
             recipient_list = [accommodation.user.email]
             send_mail(subject, message, settings.EMAIL_HOST_USER, recipient_list, fail_silently=False)
-        
+
         messages.success(request, 'Booking confirmed! You will receive a confirmation email shortly.')
         return render(request, 'main/booking_success.html')
     else:
@@ -352,8 +353,17 @@ def enquiry_create(request, accommodation_id):
             enquiry.user = request.user
             enquiry.accommodation = accommodation
             enquiry.save()
-            messages.success(request, 'Enquiry sent! The accommodation owner will be in touch shortly.')
-            return redirect('main/accommodation_detail')
+
+            # Send email to the landlord
+            if request.user.profile.user_type == 'S':
+                subject = 'New Enquiry from a student'
+                message = 'Dear {},\n\nA student has made an enquiry about your accommodation at {}.\n\nMessage: {}\n\nYou can reply to the student directly using their email address: {}\n\nBest regards,\nInter Accommodation Team'.format(accommodation.user.first_name, accommodation.name, enquiry.message, request.user.email)
+                recipient_list = [accommodation.user.email]
+                send_mail(subject, message, settings.EMAIL_HOST_USER, recipient_list, fail_silently=False)
+                messages.success(request, 'Enquiry sent! The accommodation owner will be in touch shortly.')
+            else:
+                messages.success(request, 'Enquiry sent!')
+            return redirect('main')
     else:
         form = EnquiryForm()
     return render(request, 'main/enquiry_create.html', {'form': form})

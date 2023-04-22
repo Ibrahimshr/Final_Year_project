@@ -46,7 +46,7 @@ class AccommodationForm(forms.ModelForm):
 class EnquiryForm(forms.ModelForm):
     class Meta:
         model = Enquiry
-        fields = ['message', 'accommodation']
+        fields = ['message']
         widgets = {
             'enquiry_date': forms.DateInput(attrs ={'type': 'date'}),
         }
