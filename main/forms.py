@@ -37,7 +37,7 @@ class AccommodationForm(forms.ModelForm):
     class Meta:
         model = Accommodation
         exclude = ["user"]
-        fields = ['name', 'description', 'address', 'cost_per_month', 'deposit', 'available_from', 'available_to', 'image', 'image_2']
+        fields = ['name', 'description', 'address', 'cost_per_month', 'deposit', 'available_from', 'available_to', 'image']
         widgets = {
             'available_from': forms.DateInput(attrs ={'type': 'date'}),
             'available_to': forms.DateInput(attrs={'type': 'date'}),

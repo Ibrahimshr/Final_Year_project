@@ -321,6 +321,19 @@ def booking_create(request, accommodation_id):
         booking.save()
         accommodation.availability = False
         accommodation.save()
+        #send email to the student
+        if request.user.profile.user_type == 'S':
+            subject = 'Your accommodation has been booked'
+            message = 'Dear {},\n\nYour accommodation at {} has been successfully booked.\n\nThank you for using our application!\n\nBest regards,\nInter Accommodation Team'.format(request.user.first_name, accommodation.name)
+            recipient_list = [request.user.email]
+            send_mail(subject, message, settings.EMAIL_HOST_USER, recipient_list, fail_silently=False)
+
+            # Send email to the landlord
+            subject = 'Student Has Booked Your Accommodation'
+            message = 'Dear {},\n\nA student has booked your accommodation at {}.\n\nPlease log in to your account to mark the accommodation as booked.\n\nThank you for using our application!\n\nBest regards,\nInter Accommodation Team'.format(accommodation.user.first_name, accommodation.name)
+            recipient_list = [accommodation.user.email]
+            send_mail(subject, message, settings.EMAIL_HOST_USER, recipient_list, fail_silently=False)
+        
         messages.success(request, 'Booking confirmed! You will receive a confirmation email shortly.')
         return render(request, 'main/booking_success.html')
     else:
