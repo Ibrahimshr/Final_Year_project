@@ -1,0 +1,13 @@
+{% extends "base_generic.html" %} 
+{% block content %}
+<div class="content-section">
+    <p>Sender: {{ message.send.email }}</p>
+    <p>Recipient: {{ message.receive.email }}</p>
+    <p>{{ message.date }}</p>
+
+    <h2>Title<h2>
+    <p>{{ message.title }}</p>
+    <h2>Body<h2>
+    <p>{{ message.body }}</p>
+</div>
+{% endblock %}

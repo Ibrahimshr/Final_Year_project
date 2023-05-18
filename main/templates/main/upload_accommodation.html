@@ -1,4 +1,3 @@
-
 {% extends "base_generic.html" %} 
 {% block content %}
 <div class="content-section">
@@ -7,7 +6,10 @@
         <fieldset class="form-group">
         <legend class="border-bottom mb-4">Upload Accommodation</legend>
         </fieldset>
-        {{ form.as_p }}
+        {{ formset.management_form }}
+        {% for form in formset %}
+            {{ form.as_p }}
+        {% endfor %}
         <button type="submit">Upload</button>
     </form>
 </div>

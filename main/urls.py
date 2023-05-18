@@ -16,6 +16,11 @@ urlpatterns =[
     path('enquiry/create/<int:accommodation_id>/', views.enquiry_create, name='enquiry_create'),
     path('accommodation/success/', views.booking_success, name='booking_success'),
     path('guarantor/', views.guarantor_view, name='guarantor'), 
+    path('send_message/', views.send_message, name='send_message'), 
+    path('received_messages/', views.received_messages, name='received_messages'), 
+    path('view_message/<id>', views.view_message, name='view_message'), 
+    
+    
 
 
-]
+] 

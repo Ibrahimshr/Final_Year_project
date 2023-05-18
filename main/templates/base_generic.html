@@ -30,26 +30,28 @@
                         
                     </div>
                     <!-- Navbar Right Side -->
-                    <div class="navbar-nav">
+                    <div class="navbar-nav"> 
                         {% if user.is_authenticated %}
                           {% if user.is_staff %}
                           <a class="nav-item nav-link" href="{% url 'admin' %}">User Search</a>
                           <a class="nav-item nav-link" href="{% url 'accommodation_list'%}">Accommodation Available</a>
                           <a class="nav-item nav-link" href="{% url 'upload_accommodation' %}">Upload Accommodation</a>
-                          <a class="nav-item nav-link" href=" ">Message Landlord</a>
+                          <a class="nav-item nav-link" href="{% url 'send_message' %}">Message Landlord</a>
+                          <a class="nav-item nav-link" href="{% url 'received_messages' %}">Receive Messages</a>
                           <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
                           {% elif user.profile.user_type == "L" %}
                           <a class="nav-item nav-link" href="{% url 'accommodation_list'%}">Accommodation Available</a>
                           <a class="nav-item nav-link" href="{% url 'upload_accommodation' %}">Upload Accommodation</a>
-                          <a class="nav-item nav-link" href=" ">Message Admin</a>
+                          <a class="nav-item nav-link" href="{% url 'send_message' %}">Message Admin</a>
+                          <a class="nav-item nav-link" href="{% url 'received_messages' %}">Receive Messages</a>
                           <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
-                          <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+                          <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a> 
                           {% elif user.profile.user_type == "S" %}
                           <a class="nav-item nav-link" href="{% url 'accommodation_list'%}">Accommodation Available</a>
                           <a class="nav-item nav-link" href="{% url 'guarantor' %} ">Get a Guarantor</a>
                           <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
                           <a class="nav-item nav-link" href="{% url 'logout' %} ">Logout</a>
-                          {% else %}
+                          {% else %} 
                           <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
                           {% endif %}
                         {% else %}

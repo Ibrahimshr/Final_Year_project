@@ -35,7 +35,7 @@ class Booking(models.Model):
         """string for representing the model"""
         return f'{self.user.username} {self.house} {self.booking_date}'
 class Accommodation(models.Model):
-    user= models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, unique=False)
     name = models.CharField(max_length=100)
     description = models.TextField()
     address = models.CharField(max_length=100, null=True, blank=True)
@@ -72,3 +72,11 @@ class Enquiry(models.Model):
     def __str__(self):
         """string for representing the model"""
         return f'{self.user.username} {self.accommodation.name} '
+
+
+class Message(models.Model):
+    send = models.ForeignKey(User, on_delete=models.CASCADE, related_name='send')
+    receive = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receive')
+    title = models.CharField(max_length=50)
+    body = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)

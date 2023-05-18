@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile, Booking, Accommodation, Enquiry
+from .models import Profile, Booking, Accommodation, Enquiry, Message
 
 class UserRegisterForm(UserCreationForm):
     first_name= forms.CharField()
@@ -42,7 +42,7 @@ class AccommodationForm(forms.ModelForm):
             'available_from': forms.DateInput(attrs ={'type': 'date'}),
             'available_to': forms.DateInput(attrs={'type': 'date'}),
         }
-
+        
 class EnquiryForm(forms.ModelForm):
     class Meta:
         model = Enquiry
@@ -60,3 +60,11 @@ class BookingForm(forms.ModelForm):
         }
 class UserSearchForm(forms.Form):
     username = forms.CharField(max_length=100)
+
+class MessageForm(forms.ModelForm):
+    email = forms.EmailField()
+    title = forms.CharField(max_length=50)
+    body = forms.CharField(widget=forms.Textarea)
+    class Meta:
+        model = Message
+        fields = ('title', 'body') 

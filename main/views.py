@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q
-from .models import Accommodation, Booking, Enquiry
+from .models import Accommodation, Booking, Enquiry, Message
 from .forms import EnquiryForm
 from django.http import Http404
 from django.http import HttpResponseRedirect
@@ -14,8 +14,8 @@ from django.core.mail import send_mail, EmailMessage
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, AccommodationForm, EnquiryForm, BookingForm
-import datetime
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, AccommodationForm, EnquiryForm, BookingForm, MessageForm
+from datetime import datetime
 from django.views.generic.edit import DeleteView
 from django.template import loader
 from django.contrib.sites.shortcuts import get_current_site
@@ -31,6 +31,7 @@ from django.contrib import admin
 from django.views import View
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms import formset_factory
 
 # Create your views here.
 def main(request):
@@ -93,6 +94,9 @@ class AdminView(LoginRequiredMixin, TemplateView):
             return render(request, self.template_name, {'users': users})
         else:
             return render(request, self.template_name, {'form': form})
+
+
+
 
 # Admin view for updating users
 @login_required
@@ -260,18 +264,21 @@ def accommodation_list(request):
 
 
 def upload_accommodation(request):
+    AccommodationFormSet = formset_factory(AccommodationForm, extra=1)
     if request.method == 'POST':
-        form = AccommodationForm(request.POST, request.FILES)
-        if form.is_valid():
-            #Landlords and admins can only upload houses
-            accommodation = form.save(commit=False)
-            accommodation.user = User.objects.get(username=request.user.username)
-            accommodation.save()
-            messages.success(request, 'Your accommodation has been uploaded successfully.')
+        formset = AccommodationFormSet(request.POST, request.FILES)
+        if formset.is_valid():
+            # Landlords and admins can only upload houses
+            for form in formset:
+                if form.is_valid():
+                    accommodation = form.save(commit=False)
+                    accommodation.user = request.user
+                    accommodation.save()
+            messages.success(request, 'Your accommodations have been uploaded successfully.')
             return redirect('main')
     else:
-        form = AccommodationForm()
-    return render(request, 'main/upload_accommodation.html', {'form': form})
+        formset = AccommodationFormSet()
+    return render(request, 'main/upload_accommodation.html', {'formset': formset})
 
 def delete_accommodation(request, pk):
     accommodation = get_object_or_404(Accommodation, pk=pk)
@@ -367,7 +374,44 @@ def enquiry_create(request, accommodation_id):
     else:
         form = EnquiryForm()
     return render(request, 'main/enquiry_create.html', {'form': form})
-    
+
+@login_required
+def send_message(request):   
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            receive_mail = request.POST.get('email')
+            title = request.POST.get('title') 
+            body = request.POST.get('body')
+            message.send = User.objects.get(email=request.user.email)
+            message.receive = User.objects.get(email=receive_mail)
+            message.date = datetime.now()
+            message.save()
+            messages.success(request, 'Your message has been sent to the admin.')
+            return redirect('main')
+    else:
+        form = MessageForm(request.POST)
+        return render(request, 'main/send_message.html', {'form' : form})
+
+
+@login_required 
+def received_messages(request):   
+    messages = Message.objects.order_by('-date')
+    messages_received = []
+    for x in messages:
+        if x.receive != None:
+            if x.receive.email == request.user.email:
+                messages_received.append(x) 
+    return render(request, 'main/received_messages.html', {'messages_received' : messages_received})
+
+
+@login_required
+def view_message(request, id):   
+    message = Message.objects.get(id=id)
+    return render(request, 'main/view_message.html', {'message' : message})
+
+
 """def search(request):
     query = request.GET.get('q')
     if query:

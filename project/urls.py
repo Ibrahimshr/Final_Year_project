@@ -32,9 +32,15 @@ urlpatterns = [
     path('admin/', views.AdminView.as_view(template_name='main/admin.html'), name='admin'),
     path('admin/update-user-profile/<str:username>/', views.update_user_profile, name='update_user_profile'),
     path('', include(tf_urls)),
+    
+
+
 
     path('booking/', views.booking_create, name='booking'),
     path('enquiry/', views.enquiry_create, name='enquiry'),
+    path('send_message/', views.send_message, name='send_message'), 
+    path('received_messages/', views.received_messages, name='received_messages'), 
+    path('view_message/<id>', views.view_message, name='view_message'), 
     
     path('accommodation/upload/', views.upload_accommodation, name='upload_accommodation'),
     

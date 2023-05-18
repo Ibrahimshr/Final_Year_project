@@ -1,0 +1,29 @@
+{% extends "base_generic.html" %} 
+{% block content %}
+
+<table>
+    <thead>
+        <tr>
+            <th>Received Messages</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for x in messages_received %} 
+        <tr>
+            <th>Sender</th>
+            <th>{{ x.send.email }}</th>
+        </tr>
+        <tr>
+            <th>Title</th>
+            <th><a href="/view_message/{{ x.id }}">{{ x.title }}</a></th>
+        </tr>
+        <tr>
+            <th>Date</th>
+            <th>{{ x.date }}</th>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %} 

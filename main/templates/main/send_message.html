@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %} 
+{% block content %}
+<div class="content-section">
+    <form method="POST">
+        {% csrf_token %}
+        
+        <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Contact Landlord</legend>
+        </fieldset>
+        {{ form.as_p }}
+        <button type="submit">Send</button>
+    </form>
+</div>
+{% endblock %}
